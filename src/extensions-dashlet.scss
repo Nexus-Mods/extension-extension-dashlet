@@ -1,0 +1,67 @@
+.dashlet-extensions {
+  display: flex;
+  flex-direction: column;
+  ul {
+    margin-bottom: 0;
+    padding: 0 4px;
+    flex: 1 1 0;
+    overflow: auto;
+  }
+  .placeholder {
+    height: 100%;
+  }
+
+  .extension-item {
+    background-color: $brand-menu !important;
+    padding: 0 10px;
+    margin-bottom: 8px !important;
+  }
+
+  .extension-image {
+    height: 100px;
+    background-size: cover !important;
+    background-position-y: 30% !important;
+    min-height: 50px;
+  }
+
+  .extension-type {
+    position: absolute;
+    top: 0;
+    left: 8px;
+    padding: 0 4px;
+    font-family: $font-family-headings;
+    font-weight: 400;
+    box-shadow: 0px 0px 6px 1px rgba(0,0,0,0.36);
+    background-color: $brand-info;
+    text-transform: capitalize;
+  }
+
+  .extension-title {
+    @extend .h4;
+  }
+
+  .extension-name {
+    @extend .h4;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .extension-extra {
+    background: $gray-lighter;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    font-size: smaller;
+    margin: 10px 0;
+  
+    svg {
+      margin-right: 4px;
+    }
+  
+    > div:not(:first-child) {
+      margin-left: 16px;
+    }
+  }
+}
