@@ -1,17 +1,22 @@
+import memoizeOne from 'memoize-one';
 import * as React from 'react';
 import { Button, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import * as Redux from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { actions, ComponentEx, Dashlet, tooltip, types, util, Icon } from 'vortex-api';
+import { actions, ComponentEx, Dashlet, Icon, tooltip, types, util } from 'vortex-api';
 
 import { NAMESPACE, NUM_DISPLAY_ITEMS } from './constants';
+
+// 15 minutes
+const ENDORSEMENT_DELAY = 15 * 60 * 1000;
 
 interface IConnectedProps {
   extensionState: { [extId: string]: types.IExtensionState };
   extensions: any[];
   installed: { [extId: string]: any };
+  downloads: { [dlId: string]: types.IDownload };
   user: string;
 }
 
@@ -26,6 +31,26 @@ interface IExtensionsDashletState {
 }
 
 class ExtensionsDashlet extends ComponentEx<IProps, IExtensionsDashletState> {
+  private extensionsByModId = memoizeOne(extensions => extensions.reduce((prev, ext) => {
+      if (ext.modId !== undefined) {
+        prev[ext.modId] = ext;
+      }
+      return prev;
+    }, {}));
+
+  private downloadsByFileId = memoizeOne((downloads: { [dlId: string]: types.IDownload }) => {
+    const res: { [fileId: number]: string } =
+      Object.keys(downloads).reduce((prev, dlId: string) => {
+        const nexusFileId = util.getSafe(downloads[dlId],
+          ['modInfo', 'nexus', 'ids', 'fileId'], undefined);
+        if (nexusFileId !== undefined) {
+          prev[nexusFileId] = dlId;
+        }
+        return prev;
+      }, {});
+    return res;
+  });
+
   constructor(props: IProps) {
     super(props);
 
@@ -36,13 +61,6 @@ class ExtensionsDashlet extends ComponentEx<IProps, IExtensionsDashletState> {
     const { t, extensions, extensionState, installed, user } = this.props;
     const { skipEndorsing } = this.state;
 
-    const extensionsByModId = extensions.reduce((prev, ext) => {
-      if (ext.modId !== undefined) {
-        prev[ext.modId] = ext;
-      }
-      return prev;
-    }, {});
-
     const installedModIds = new Set(Object.values(installed).map(inst => inst.modId));
 
     const sortedAvailable = extensions
@@ -50,14 +68,7 @@ class ExtensionsDashlet extends ComponentEx<IProps, IExtensionsDashletState> {
       .sort((lhs, rhs) => rhs.timestamp - lhs.timestamp)
       .slice(0, NUM_DISPLAY_ITEMS);
 
-    const getAuthor = (extId: string) =>
-      util.getSafe(extensionsByModId, [installed[extId].modId, 'uploader'], undefined);
-
-    const unendorsed = Object.keys(installed)
-      .filter(ext =>
-        (util.getSafe(installed, [ext, 'modId'], undefined) !== undefined)
-        && (getAuthor(ext) !== user)
-        && (util.getSafe(extensionState, [ext, 'endorsed'], 'Undecided') === 'Undecided'));
+    const unendorsed = Object.keys(installed).filter(iter => this.isUnendorsed(iter));
 
     const newsMode = skipEndorsing || (unendorsed.length === 0);
 
@@ -138,6 +149,24 @@ class ExtensionsDashlet extends ComponentEx<IProps, IExtensionsDashletState> {
     );
   }
 
+  private isUnendorsed(extId: any) {
+    const { downloads, extensions, extensionState, installed, user } = this.props;
+
+    if (installed[extId].modId === undefined) {
+      return false;
+    }
+
+    const ext: any = util.getSafe(this.extensionsByModId(extensions), [installed[extId].modId], {});
+
+    const dlId = ext !== undefined ? this.downloadsByFileId(downloads)[ext.fileId] : undefined;
+
+    const now = Date.now();
+
+    return (ext.uploader !== user)
+      && ((dlId === undefined) || (now - downloads[dlId].fileTime > ENDORSEMENT_DELAY))
+      && (util.getSafe(extensionState, [extId, 'endorsed'], 'Undecided') === 'Undecided');
+  }
+
   private nexusUrl = (ext: any) => {
     return `https://www.nexusmods.com/site/mods/${ext.modId}`;
   }
@@ -189,6 +218,7 @@ function mapStateToProps(state: types.IState): IConnectedProps {
     extensionState: state.app.extensions,
     extensions: state.session.extensions.available,
     installed: state.session.extensions.installed,
+    downloads: state.persistent.downloads.files,
     user: util.getSafe(state, ['persistent', 'nexus', 'userInfo', 'name'], undefined),
   };
 }
