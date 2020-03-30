@@ -73,7 +73,7 @@ class ExtensionsDashlet extends ComponentEx<IProps, IExtensionsDashletState> {
     const newsMode = skipEndorsing || (unendorsed.length === 0);
 
     return (
-      <Dashlet className='dashlet-extensions' title={t('Extensions')}>
+      <Dashlet className='dashlet-extensions' title={t('Latest Extensions')}>
         {
           newsMode
             ? null
