@@ -183,7 +183,7 @@ class ExtensionsDashlet extends ComponentEx<IProps, IExtensionsDashletState> {
         .then(() => {
           this.context.api.sendNotification({
             type: 'success',
-            message: 'Extension installed, please restart Vortex to enable tt',
+            message: 'Extension installed, please restart Vortex to enable it',
             displayMS: 2000,
           });
         });
