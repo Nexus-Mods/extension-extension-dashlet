@@ -156,7 +156,12 @@ class ExtensionsDashlet extends ComponentEx<IProps, IExtensionsDashletState> {
       return false;
     }
 
-    const ext: any = util.getSafe(this.extensionsByModId(extensions), [installed[extId].modId], {});
+    const ext =
+      util.getSafe(this.extensionsByModId(extensions), [installed[extId].modId], undefined);
+
+    if (ext === undefined) {
+      return false;
+    }
 
     const dlId = ext !== undefined ? this.downloadsByFileId(downloads)[ext.fileId] : undefined;
 
