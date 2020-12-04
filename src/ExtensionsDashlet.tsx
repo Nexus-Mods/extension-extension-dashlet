@@ -14,7 +14,7 @@ const ENDORSEMENT_DELAY = 15 * 60 * 1000;
 
 interface IConnectedProps {
   extensionState: { [extId: string]: types.IExtensionState };
-  extensions: any[];
+  extensions: types.IAvailableExtension[];
   installed: { [extId: string]: any };
   downloads: { [dlId: string]: types.IDownload };
   user: string;
@@ -58,7 +58,7 @@ class ExtensionsDashlet extends ComponentEx<IProps, IExtensionsDashletState> {
   }
 
   public render(): JSX.Element {
-    const { t, extensions, extensionState, installed, user } = this.props;
+    const { t, extensions, installed } = this.props;
     const { skipEndorsing } = this.state;
 
     const installedModIds = new Set(Object.values(installed).map(inst => inst.modId));
@@ -113,7 +113,7 @@ class ExtensionsDashlet extends ComponentEx<IProps, IExtensionsDashletState> {
   }
 
   private renderEndorse = (extId: string, idx: number) => {
-    const { t, extensions, installed, extensionState } = this.props;
+    const { t, extensions, installed } = this.props;
 
     const inst = installed[extId];
     const ext = extensions.find(iter => iter.modId === inst.modId);
