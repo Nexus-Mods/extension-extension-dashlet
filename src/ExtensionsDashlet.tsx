@@ -93,6 +93,10 @@ class ExtensionsDashlet extends ComponentEx<IProps, IExtensionsDashletState> {
   private renderExt = (ext: any, idx: number) => {
     const { t } = this.props;
 
+    const onClick = () => {
+      this.context.api.events.emit('analytics-track-click-event', 'Dashboard', 'View latest extension');
+    }
+
     return (
       <ListGroupItem className='extension-item' key={idx}>
         <div className='extension-type'>{ext.type || 'extension'}</div>
@@ -100,7 +104,7 @@ class ExtensionsDashlet extends ComponentEx<IProps, IExtensionsDashletState> {
           className='extension-image'
           style={{ background: `url(${ext.image})` }}
         />
-        <h4><a href={this.nexusUrl(ext)}>{ext.name}</a></h4>
+        <h4><a onClick={onClick} href={this.nexusUrl(ext)}>{ext.name}</a></h4>
         <p className='extension-summary'>{ext.description.short}</p>
         <div className='extension-extra'>
           <div>
