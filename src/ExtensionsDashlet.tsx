@@ -40,7 +40,7 @@ class ExtensionsDashlet extends ComponentEx<IProps, IExtensionsDashletState> {
 
   private downloadsByFileId = memoizeOne((downloads: { [dlId: string]: types.IDownload }) => {
     const res: { [fileId: number]: string } =
-      Object.keys(downloads).reduce((prev, dlId: string) => {
+      Object.keys(downloads ?? {}).reduce((prev, dlId: string) => {
         const nexusFileId = util.getSafe(downloads[dlId],
           ['modInfo', 'nexus', 'ids', 'fileId'], undefined);
         if (nexusFileId !== undefined) {
