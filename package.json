@@ -4,7 +4,7 @@
   "description": "Dashlet to advertise newly released dashlets and remind user to endorse",
   "main": "./out/index.js",
   "scripts": {
-    "webpack": "webpack --config webpack.config.js --display-error-details --progress --profile --color",
+    "webpack": "webpack --config webpack.config.js --progress --profile --color",
     "build": "npm run webpack && copyfiles -f src/extensions-dashlet.scss dist && extractInfo"
   },
   "author": "Black Tree Gaming Ltd.",
@@ -15,15 +15,11 @@
     "@types/react-bootstrap": "^0.32.20",
     "@types/react-redux": "^7.1.5",
     "copyfiles": "^2.2.0",
-    "i18next": "^19.3.1",
     "react-i18next": "^11.2.2",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "ts-loader": "^6.2.1",
     "turbowalk": "Nexus-Mods/node-turbowalk",
     "typescript": "^4.4.3",
-    "vortex-api": "Nexus-Mods/vortex-api",
-    "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10"
+    "vortex-ext-dependencies": "Nexus-Mods/vortex-ext-dependencies"
   }
 }
