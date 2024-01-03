@@ -35,14 +35,17 @@
 
   .extension-type {
     position: absolute;
-    top: 12px;
-    left: 0;
-    padding: 0 4px;
-    font-family: $font-family-headings;
-    font-weight: bold;
-    box-shadow: none;
+    top: 16px;    
+    left: 16px;
+    padding: 2px 8px;
+    font-family: $font-family-base;
+    font-weight: 600;
+    box-shadow: 0px 2px 6px 1px rgba(0,0,0,0.5);
     background-color: $brand-info;
     text-transform: uppercase;
+    color: $white;
+    border-radius: 20px;
+    font-size: smaller
   }
 
   .extension-title {
