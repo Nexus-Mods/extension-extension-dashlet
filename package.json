@@ -1,6 +1,6 @@
 {
   "name": "extensions-dashlet",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Dashlet to advertise newly released dashlets and remind user to endorse",
   "main": "./out/index.js",
   "scripts": {

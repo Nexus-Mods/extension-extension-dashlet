@@ -22,7 +22,7 @@
     user-select: all;
     border-radius: 4px;
     border: 1px solid #1c1e1d;
-    padding: 8px;
+    padding: 16px;
     background-color: $brand-bg;
   }
 
@@ -35,8 +35,8 @@
 
   .extension-type {
     position: absolute;
-    top: 16px;    
-    left: 16px;
+    top: 8px;    
+    left: 8px;
     padding: 2px 8px;
     font-family: $font-family-base;
     font-weight: 600;
